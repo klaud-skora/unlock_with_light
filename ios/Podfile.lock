@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - light (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - light (from `.symlinks/plugins/light/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  light:
+    :path: ".symlinks/plugins/light/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  light: de3005d4a28e645dc1b38162f93c457f15ea5e05
+
+PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+
+COCOAPODS: 1.9.2
