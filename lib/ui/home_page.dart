@@ -77,37 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.purple.withOpacity(.1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.purple.shade900)
-                    ),
-                      onPressed: () => {print('hj')},
-                      child: Text('?'),
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  Container(
-                    width: 50.0,
-                    height: 66.0,
-                    child: RaisedButton(
-                      color: Colors.purple.withOpacity(.1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.purple.shade900)
-                    ),
-                      onPressed: () => {print('hj')},
-                      child: Text('?'),
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  Container(
-                    width: 50.0,
-                    height: 66.0,
-                    child: RaisedButton(
-                      color: Colors.purple.withOpacity(.1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.purple.shade900)
-                    ),
-                      onPressed: () => {print('hj')},
+                        side: BorderSide(color: Colors.purple.shade900)
+                      ),
+                      onPressed: () => {print(_luxString)},
                       child: Text('?'),
                     ),
                   ),
@@ -121,7 +93,35 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900)
                       ),
-                      onPressed: () => {print('hj')},
+                      onPressed: () => {print(_luxString)},
+                      child: Text('?'),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Container(
+                    width: 50.0,
+                    height: 66.0,
+                    child: RaisedButton(
+                      color: Colors.purple.withOpacity(.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.purple.shade900)
+                      ),
+                      onPressed: () => {print(_luxString)},
+                      child: Text('?'),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Container(
+                    width: 50.0,
+                    height: 66.0,
+                    child: RaisedButton(
+                      color: Colors.purple.withOpacity(.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.purple.shade900)
+                      ),
+                      onPressed: () => {print(_luxString)},
                       child: Text('?'),
                     ),
                   ),
@@ -138,7 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontSize: 22.0
                 )
               ),
-              
               SizedBox(height: 70.0),
             ],
           ), 
