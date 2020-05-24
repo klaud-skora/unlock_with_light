@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(
-        title: 'Light unlocker'
+        title: 'Light unlocker',
       ),
     );
   }

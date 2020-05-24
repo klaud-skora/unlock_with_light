@@ -62,7 +62,7 @@ extension ValueExtension on Value {
 
 }
 
-enum Card {
+enum Cards {
   one,
   two,
   three,
@@ -71,28 +71,31 @@ enum Card {
 
 class Unlocker {
 
+  final int pin;
+  Unlocker(this.pin);
 
   List<Value> _values = [Value.blank, Value.blank, Value.blank, Value.blank];
 
   List<Value> get values => _values;
 
   bool isPinSet() {
+    print(values);
     return !values.contains(Value.blank);
   }
 
-  setCard(Card card, luxes) {
+  setCard(Cards card, luxes) {
     switch(card) {
-      case Card.one:
+      case Cards.one:
         _values[0] = getValue(luxes);
         break;
-      case Card.two:
-        
+      case Cards.two:
+        _values[1] = getValue(luxes);
         break;
-      case Card.three:
-        
+      case Cards.three:
+        _values[2] = getValue(luxes);
         break;
-      case Card.four:
-        
+      case Cards.four:
+        _values[3] = getValue(luxes);
         break;
     }
 
