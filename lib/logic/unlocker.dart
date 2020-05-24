@@ -99,7 +99,7 @@ class Unlocker {
   Value getValue(int lux) {
     if (lux != null) {
       for(Value value in Value.values ) {
-        if( lux < value.range ) return value;
+        if( lux <= value.range ) return value;
       }
     }
     return Value.blank;

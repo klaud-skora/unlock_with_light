@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 50.0),
               Text('Use lux value to tap the pin code.'),
               SizedBox(height: 10.0),
-              Text('Touch each card to set it with a running value.'),
+              Text('Touch each of four cards to set it with a running value.'),
               SizedBox(height: 150.0),
               Row(    
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
               Text(_luxString, style: TextStyle( fontSize: 22.0 )),
               SizedBox(height: 70.0),
             ],
-          ) : unlocker.isPinCorrect() ? Text('You successfully unlocked the app!') : Column(
+          ) : unlocker.isPinCorrect() ? 
+          /* PIN IS CORRECT */
+          Text('You successfully unlocked the app!') 
+          /* PIN IS INCORRECT */
+          : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),

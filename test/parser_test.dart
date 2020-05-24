@@ -4,7 +4,7 @@ import '../lib/logic/parser.dart';
 void main() {
   test('test good input' , () {
     var result = parser('40');
-    expect(result, 180);
+    expect(result, 40);
   });
 
   test('test null input' , () {
