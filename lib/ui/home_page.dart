@@ -153,7 +153,21 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 70.0),
             ],
-          ) : Text('You successfully unlocked the app!'), 
+          ) : unlocker.isPinCorrect() ? Text('You successfully unlocked the app!') : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
+              SizedBox(height: 20.0),
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                color: Colors.purple,
+                onPressed: () => unlocker.reset(),
+                child: Text('Try again', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ), 
         ),
       ),
     );

@@ -105,4 +105,10 @@ class Unlocker {
     return Value.blank;
   }
 
+  bool isPinCorrect() => false;
+
+  reset() {
+    _values = [Value.blank, Value.blank, Value.blank, Value.blank];
+  }
+
 }
