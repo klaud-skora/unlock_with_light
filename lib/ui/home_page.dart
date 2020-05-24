@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Container(
         color: Colors.purple.withOpacity(.2),
         child: Center(
-          child: !unlocker.isPinSet() ? Column(
+          child: unlocker.state is UnlockingStatus ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 50.0),
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text(_luxString, style: TextStyle( fontSize: 22.0 )),
               SizedBox(height: 70.0),
             ],
-          ) : unlocker.isPinCorrect() ? 
+          ) : unlocker.verifier.value ? 
           /* PIN IS CORRECT */
           Text('You successfully unlocked the app!') 
           /* PIN IS INCORRECT */

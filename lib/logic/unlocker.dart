@@ -69,6 +69,29 @@ enum Cards {
   four,
 }
 
+enum Verifier {
+  correct,
+  incorrect,
+}
+
+extension VerifierExtension on Verifier {
+   static final values = {
+    Verifier.correct: true,
+    Verifier.incorrect: false,
+  };
+
+  bool get value => values[this];
+}
+
+abstract class CodeStatus {}
+
+class UnlockingStatus extends CodeStatus {}
+
+class SetCodeStatus extends CodeStatus {
+  final Verifier verifier;
+  SetCodeStatus(this.verifier);	
+}
+
 class Unlocker {
 
   final int pin;
@@ -76,8 +99,17 @@ class Unlocker {
 
   List<Value> _values = [Value.blank, Value.blank, Value.blank, Value.blank];
   List<Value> get values => _values;
+  Verifier _verifier;
+  Verifier get verifier => _verifier;
 
-  bool isPinSet() => !values.contains(Value.blank);
+  CodeStatus get state {
+    if (!values.contains(Value.blank)){
+      _verifier = isPinCorrect() ? Verifier.correct : Verifier.incorrect;
+      return isPinCorrect() ? SetCodeStatus(Verifier.correct) : SetCodeStatus(Verifier.incorrect);
+    } else {
+      return UnlockingStatus();
+    }
+  }
 
   setCard(Cards card, luxes) {
     switch(card) {
