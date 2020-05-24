@@ -105,9 +105,9 @@ class Unlocker {
     return Value.blank;
   }
 
-  bool isPinCorrect() => false;
+  bool isPinCorrect() => pin == (values[0].move * 1000 + values[1].move * 100 + values[2].move * 10 + values[3].move * 1);
 
-  reset() {
+  void reset() {
     _values = [Value.blank, Value.blank, Value.blank, Value.blank];
   }
 

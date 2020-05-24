@@ -82,11 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.purple.withOpacity(.1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.purple.shade900)
+                        side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => {
-                        unlocker.setCard(Cards.one, parser(_luxString)),
-                      },
+                      onPressed: () => { unlocker.setCard(Cards.one, parser(_luxString)) },
                       child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -98,11 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.purple.withOpacity(.1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.purple.shade900)
+                        side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => {
-                        unlocker.setCard(Cards.two, parser(_luxString)),
-                      },
+                      onPressed: () => { unlocker.setCard(Cards.two, parser(_luxString)) },
                       child: Text(unlocker.values[1] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -114,11 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.purple.withOpacity(.1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.purple.shade900)
+                        side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => {
-                        unlocker.setCard(Cards.three, parser(_luxString)),
-                      },
+                      onPressed: () => { unlocker.setCard(Cards.three, parser(_luxString)) },
                       child: Text(unlocker.values[2] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -132,25 +126,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900)
                       ),
-                      onPressed: () => {
-                        unlocker.setCard(Cards.four, parser(_luxString)),
-                      },
+                      onPressed: () => { unlocker.setCard(Cards.four, parser(_luxString)) },
                       child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 50.0),
-              Text('Present value:',
-                style: TextStyle(
-                  fontSize: 22.0
-                )
-              ),
-              Text(_luxString,
-                style: TextStyle(
-                  fontSize: 22.0
-                )
-              ),
+              Text('Present value:', style: TextStyle( fontSize: 22.0 )),
+              Text(_luxString, style: TextStyle( fontSize: 22.0 )),
               SizedBox(height: 70.0),
             ],
           ) : unlocker.isPinCorrect() ? Text('You successfully unlocked the app!') : Column(
@@ -159,9 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
               SizedBox(height: 20.0),
               FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
                 color: Colors.purple,
                 onPressed: () => unlocker.reset(),
                 child: Text('Try again', style: TextStyle(color: Colors.white)),
