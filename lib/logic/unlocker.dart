@@ -3,17 +3,17 @@ enum Level {
   second,
   third,
   fourth,
-  fifth
+  fifth,
 }
 
 extension LevelExtention on Level {
 
-  static final luxs = {
+  static final ranges = {
     Level.first: 40,
     Level.second: 80,
     Level.third: 120,
     Level.fourth: 160,
-    Level.fifth: double.infinity,
+    Level.fifth: 10000,
   };
 
   static final values = {
@@ -24,7 +24,7 @@ extension LevelExtention on Level {
     Level.fifth: 5,
   };
 
-  int get lux => luxs[this];
+  int get range => ranges[this];
   int get value => values[this];
 
 }
@@ -49,11 +49,11 @@ extension ValueExtension on Value {
   };
 
   static final ranges = {
-    Value.one: Level.first.lux,
-    Value.two: Level.second.lux,
-    Value.three: Level.third.lux,
-    Value.four: Level.fourth.lux,
-    Value.five: Level.fifth.lux,
+    Value.one: Level.first.range,
+    Value.two: Level.second.range,
+    Value.three: Level.third.range,
+    Value.four: Level.fourth.range,
+    Value.five: Level.fifth.range,
     Value.blank: null,
   };
 
@@ -75,13 +75,9 @@ class Unlocker {
   Unlocker(this.pin);
 
   List<Value> _values = [Value.blank, Value.blank, Value.blank, Value.blank];
-
   List<Value> get values => _values;
 
-  bool isPinSet() {
-    print(values);
-    return !values.contains(Value.blank);
-  }
+  bool isPinSet() => !values.contains(Value.blank);
 
   setCard(Cards card, luxes) {
     switch(card) {
@@ -98,7 +94,6 @@ class Unlocker {
         _values[3] = getValue(luxes);
         break;
     }
-
   }
 
   Value getValue(int lux) {
