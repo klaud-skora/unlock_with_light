@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 70.0),
             ],
-          ) : unlocker.verifier.value ? 
+          ) : unlocker.verifier == Verifier.correct ? 
           /* PIN IS CORRECT */
           Text('You successfully unlocked the app!') 
           /* PIN IS INCORRECT */

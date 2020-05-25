@@ -74,15 +74,6 @@ enum Verifier {
   incorrect,
 }
 
-extension VerifierExtension on Verifier {
-   static final values = {
-    Verifier.correct: true,
-    Verifier.incorrect: false,
-  };
-
-  bool get value => values[this];
-}
-
 abstract class CodeStatus {}
 
 class UnlockingStatus extends CodeStatus {}

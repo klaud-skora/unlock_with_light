@@ -6,20 +6,20 @@ void main() {
   /* TEST APP STATUS */ 
   test('default state', () {
     Unlocker unlocker = Unlocker(1111);
-    expect((unlocker.state is UnlockingStatus),  true);
+    expect(unlocker.state is UnlockingStatus, true);
   });
 
   test('state with one selected value', () {
     Unlocker unlocker = Unlocker(1111);
     unlocker.setCard(Cards.one, 150);
-    expect(unlocker.state is UnlockingStatus,  true);
+    expect(unlocker.state is UnlockingStatus, true);
   });
 
   test('state with two selected values', () {
     Unlocker unlocker = Unlocker(1111);
     unlocker.setCard(Cards.one, 150);
     unlocker.setCard(Cards.two, 200);
-    expect(unlocker.state is UnlockingStatus,  true);
+    expect(unlocker.state is UnlockingStatus, true);
   });
 
   test('state with three selected values', () {
@@ -27,7 +27,7 @@ void main() {
     unlocker.setCard(Cards.one, 150);
     unlocker.setCard(Cards.two, 200);
     unlocker.setCard(Cards.three, 33);
-    expect(unlocker.state is UnlockingStatus,  true);
+    expect(unlocker.state is UnlockingStatus, true);
   });
 
   test('state with completed pin', () {
@@ -36,7 +36,7 @@ void main() {
     unlocker.setCard(Cards.two, 200);
     unlocker.setCard(Cards.three, 33);
     unlocker.setCard(Cards.four, 90);
-    expect(unlocker.state is SetCodeStatus,  true);
+    expect(unlocker.state is SetCodeStatus, true);
   });
   
   /* TEST PIN */ 
@@ -48,7 +48,7 @@ void main() {
     unlocker.setCard(Cards.four, 33);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, true);
+    expect(unlocker.verifier, Verifier.correct);
   });
 
   test('good pin 2', () {
@@ -59,7 +59,7 @@ void main() {
     unlocker.setCard(Cards.four, 40);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, true);
+    expect(unlocker.verifier, Verifier.correct);
   });
 
   test('wrong pin', () {
@@ -70,7 +70,7 @@ void main() {
     unlocker.setCard(Cards.four, 41);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, false);
+    expect(unlocker.verifier, Verifier.incorrect);
   });
 
   test('wrong pin 2', () {
@@ -81,7 +81,7 @@ void main() {
     unlocker.setCard(Cards.four, 200);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, false);
+    expect(unlocker.verifier, Verifier.incorrect);
   });
 
   test('wrong pin 3', () {
@@ -92,7 +92,7 @@ void main() {
     unlocker.setCard(Cards.four, 80);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, false);
+    expect(unlocker.verifier, Verifier.incorrect);
   });
 
   test('wrong pin 4', () {
@@ -103,7 +103,7 @@ void main() {
     unlocker.setCard(Cards.four, 190);
     var status = unlocker.state is SetCodeStatus;
     expect(status, true);
-    expect(unlocker.verifier.value, false);
+    expect(unlocker.verifier, Verifier.incorrect);
   });
 
 }
