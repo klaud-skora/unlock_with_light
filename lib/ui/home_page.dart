@@ -48,6 +48,17 @@ class _MyHomePageState extends State<MyHomePage> {
     initPlatformState();
   }
 
+  @override
+  void dispose() {
+    try {
+      stopListening();
+    } catch (exception) {
+      print(exception.toString());
+    } finally {
+      super.dispose();
+    }
+  }
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     startListening();
