@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:light/light.dart';
 import '../logic/unlocker.dart';
-import '../logic/parser.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -18,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   static int pin = 1524;
   Unlocker unlocker = Unlocker(pin);
 
-  String _luxString = 'Unknown';
+  int _lux = -1;
   Light _light = new Light();
   StreamSubscription _subscription;
 
@@ -34,9 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onData(int luxValue) async {
-    print("Lux value: $luxValue");
     setState(() {
-      _luxString = "$luxValue";
+      _lux = luxValue;
     });
   }
 
@@ -84,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => { unlocker.setCard(Cards.one, parser(_luxString)) },
+                      onPressed: () => { unlocker.setCard(Cards.one, _lux) },
                       child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -98,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => { unlocker.setCard(Cards.two, parser(_luxString)) },
+                      onPressed: () => { unlocker.setCard(Cards.two, _lux) },
                       child: Text(unlocker.values[1] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -112,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900),
                       ),
-                      onPressed: () => { unlocker.setCard(Cards.three, parser(_luxString)) },
+                      onPressed: () => { unlocker.setCard(Cards.three, _lux) },
                       child: Text(unlocker.values[2] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -126,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.purple.shade900)
                       ),
-                      onPressed: () => { unlocker.setCard(Cards.four, parser(_luxString)) },
+                      onPressed: () => { unlocker.setCard(Cards.four, _lux) },
                       child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
                     ),
                   ),
@@ -134,7 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 50.0),
               Text('Present value:', style: TextStyle( fontSize: 22.0 )),
-              Text(_luxString, style: TextStyle( fontSize: 22.0 )),
+              SizedBox(height: 10.0),
+              Text(_lux == -1 ? '(no value was found)' : '$_lux', 
+                style: TextStyle( fontSize: 22.0 ),
+              ),
               SizedBox(height: 70.0),
             ],
           ) : unlocker.verifier.value ? 
