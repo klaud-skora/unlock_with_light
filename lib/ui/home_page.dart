@@ -18,7 +18,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Unlocker unlocker = Unlocker(pin);
   final StreamController<int> _luxController = StreamController<int>.broadcast();
   final StreamController _contentController = StreamController();
-  final StreamController _signController = StreamController.broadcast();
 
   Light _light = new Light();
   StreamSubscription _subscription;
@@ -36,8 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onData(int luxValue) async {
     _luxController.sink.add(luxValue);
-    _contentController.sink.add(unlocker.state);
-    _signController.sink.add(unlocker.values);
   }
 
    void stopListening() {
@@ -56,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
       stopListening();
        _luxController.close();
        _contentController.close();
-       _signController.close();
     } catch (exception) {
       print(exception.toString());
     } finally {
@@ -82,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             stream: _contentController.stream,
             initialData: UnlockingStatus,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return  snapshot.data is UnlockingStatus ? Column(
+              return  unlocker.state is UnlockingStatus ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 50.0),
@@ -106,14 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
-                              onPressed: () => { unlocker.setCard(Cards.one, snapshot.data) },
-                              child: StreamBuilder(
-                                stream: _signController.stream,
-                                initialData: Value.blank,
-                                builder: (BuildContext context, AsyncSnapshot signSnap) {
-                                  return Text(unlocker.values[0] == Value.blank ? '?' : '*');
-                                },
-                              ),
+                              onPressed: () => { unlocker.setCard(Cards.one, snapshot.data), _contentController.sink.add(unlocker) },
+                              child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
                             );
                           },
                         ),
@@ -132,14 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
-                              onPressed: () => { unlocker.setCard(Cards.two, snapshot.data) },
-                              child: StreamBuilder(
-                                stream: _signController.stream,
-                                initialData: Value.blank,
-                                builder: (BuildContext context, AsyncSnapshot signSnap) {
-                                  return Text(unlocker.values[1] == Value.blank ? '?' : '*');
-                                },
-                              ),
+                              onPressed: () => { unlocker.setCard(Cards.two, snapshot.data), _contentController.sink.add(unlocker) },
+                              child: Text(unlocker.values[1] == Value.blank ? '?' : '*')
                             );
                           },
                         ),
@@ -158,14 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
-                              onPressed: () => { unlocker.setCard(Cards.three, snapshot.data) },
-                              child: StreamBuilder(
-                                stream: _signController.stream,
-                                initialData: Value.blank,
-                                builder: (BuildContext context, AsyncSnapshot signSnap) {
-                                  return Text(unlocker.values[2] == Value.blank ? '?' : '*');
-                                },
-                              ),
+                              onPressed: () => { unlocker.setCard(Cards.three, snapshot.data), _contentController.sink.add(unlocker) },
+                              child: Text(unlocker.values[2] == Value.blank ? '?' : '*')
                             );
                           },
                         ),
@@ -184,14 +162,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
-                              onPressed: () => { unlocker.setCard(Cards.four, snapshot.data) },
-                              child: StreamBuilder(
-                                stream: _signController.stream,
-                                initialData: Value.blank,
-                                builder: (BuildContext context, AsyncSnapshot signSnap) {
-                                  return Text(unlocker.values[3] == Value.blank ? '?' : '*');
-                                },
-                              ),
+                              onPressed: () => { unlocker.setCard(Cards.four, snapshot.data), _contentController.sink.add(unlocker) },
+                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
                             );
                           },
                         ),
@@ -223,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   FlatButton(
                     shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
                     color: Colors.purple,
-                    onPressed: () => unlocker.reset(),
+                    onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
                     child: Text('Try again', style: TextStyle(color: Colors.white)),
                   ),
                 ],
