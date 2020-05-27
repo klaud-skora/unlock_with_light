@@ -16,8 +16,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static int pin = 1524;
   Unlocker unlocker = Unlocker(pin);
+  final StreamController<int> _luxController = StreamController<int>();
 
-  int _lux = -1;
+  int _lux;
   Light _light = new Light();
   StreamSubscription _subscription;
 
@@ -33,9 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onData(int luxValue) async {
-    setState(() {
-      _lux = luxValue;
-    });
+    _luxController.sink.add(luxValue);
   }
 
    void stopListening() {
@@ -52,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     try {
       stopListening();
+       _luxController.close();
     } catch (exception) {
       print(exception.toString());
     } finally {
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         side: BorderSide(color: Colors.purple.shade900),
                       ),
                       onPressed: () => { unlocker.setCard(Cards.one, _lux) },
-                      child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
+                      child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),   
                     ),
                   ),
                   SizedBox(width: 10.0),
@@ -144,8 +144,16 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 50.0),
               Text('Present value:', style: TextStyle( fontSize: 22.0 )),
               SizedBox(height: 10.0),
-              Text(_lux == -1 ? '(no value was found)' : '$_lux', 
-                style: TextStyle( fontSize: 22.0 ),
+              // Text(_lux == -1 ? '(no value was found)' : '$_lux', 
+              //   style: TextStyle( fontSize: 22.0 ),
+              // ),
+              StreamBuilder(
+                stream: _luxController.stream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
+                    style: TextStyle( fontSize: 22.0 ),
+                  );
+                }
               ),
               SizedBox(height: 70.0),
             ],
