@@ -18,6 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Unlocker unlocker = Unlocker(pin);
   final StreamController<int> _luxController = StreamController<int>.broadcast();
   final StreamController _contentController = StreamController();
+  final StreamController _signController = StreamController.broadcast();
 
   Light _light = new Light();
   StreamSubscription _subscription;
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void onData(int luxValue) async {
     _luxController.sink.add(luxValue);
     _contentController.sink.add(unlocker.state);
+    _signController.sink.add(unlocker.values);
   }
 
    void stopListening() {
@@ -54,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       stopListening();
        _luxController.close();
        _contentController.close();
+       _signController.close();
     } catch (exception) {
       print(exception.toString());
     } finally {
@@ -104,7 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
                               onPressed: () => { unlocker.setCard(Cards.one, snapshot.data) },
-                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
+                              child: StreamBuilder(
+                                stream: _signController.stream,
+                                initialData: Value.blank,
+                                builder: (BuildContext context, AsyncSnapshot signSnap) {
+                                  return Text(unlocker.values[0] == Value.blank ? '?' : '*');
+                                },
+                              ),
                             );
                           },
                         ),
@@ -124,7 +133,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
                               onPressed: () => { unlocker.setCard(Cards.two, snapshot.data) },
-                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
+                              child: StreamBuilder(
+                                stream: _signController.stream,
+                                initialData: Value.blank,
+                                builder: (BuildContext context, AsyncSnapshot signSnap) {
+                                  return Text(unlocker.values[1] == Value.blank ? '?' : '*');
+                                },
+                              ),
                             );
                           },
                         ),
@@ -144,7 +159,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
                               onPressed: () => { unlocker.setCard(Cards.three, snapshot.data) },
-                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
+                              child: StreamBuilder(
+                                stream: _signController.stream,
+                                initialData: Value.blank,
+                                builder: (BuildContext context, AsyncSnapshot signSnap) {
+                                  return Text(unlocker.values[2] == Value.blank ? '?' : '*');
+                                },
+                              ),
                             );
                           },
                         ),
@@ -164,7 +185,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 side: BorderSide(color: Colors.purple.shade900)
                               ),
                               onPressed: () => { unlocker.setCard(Cards.four, snapshot.data) },
-                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
+                              child: StreamBuilder(
+                                stream: _signController.stream,
+                                initialData: Value.blank,
+                                builder: (BuildContext context, AsyncSnapshot signSnap) {
+                                  return Text(unlocker.values[3] == Value.blank ? '?' : '*');
+                                },
+                              ),
                             );
                           },
                         ),
