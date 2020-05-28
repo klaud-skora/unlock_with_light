@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:light/light.dart';
+import 'package:tictactoe/light_bloc.dart';
 import '../logic/unlocker.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -16,42 +16,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static int pin = 1524;
   Unlocker unlocker = Unlocker(pin);
-  final StreamController<int> _luxController = StreamController<int>.broadcast();
+
+  final bloc = LightBloc();
   final StreamController _contentController = StreamController();
 
-  Light _light = new Light();
-  StreamSubscription _subscription;
-
-  void startListening() {
-    _light = new Light();
-    try {
-      _subscription = _light.lightSensorStream.listen(onData);
-      print(_light.lightSensorStream);
-    }
-    on LightException catch (exception) {
-      print(exception);
-    }
-  }
-
-  void onData(int luxValue) async {
-    _luxController.sink.add(luxValue);
-  }
-
-   void stopListening() {
-    _subscription.cancel();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
 
   @override
   void dispose() {
     try {
-      stopListening();
-       _luxController.close();
+      //  _luxController.close();
        _contentController.close();
     } catch (exception) {
       print(exception.toString());
@@ -60,11 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    startListening();
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,94 +57,95 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(    
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        width: 50.0,
-                        height: 66.0,
-                        child: StreamBuilder( 
-                          stream: _luxController.stream,
-                          initialData: null,
-                          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlocker.setCard(Cards.one, snapshot.data), _contentController.sink.add(unlocker) },
-                              child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10.0),
-                      Container(
-                        width: 50.0,
-                        height: 66.0,
-                        child: StreamBuilder( 
-                          stream: _luxController.stream,
-                          initialData: null,
-                          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlocker.setCard(Cards.two, snapshot.data), _contentController.sink.add(unlocker) },
-                              child: Text(unlocker.values[1] == Value.blank ? '?' : '*')
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10.0),
-                      Container(
-                        width: 50.0,
-                        height: 66.0,
-                        child: StreamBuilder( 
-                          stream: _luxController.stream,
-                          initialData: null,
-                          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlocker.setCard(Cards.three, snapshot.data), _contentController.sink.add(unlocker) },
-                              child: Text(unlocker.values[2] == Value.blank ? '?' : '*')
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10.0),
-                      Container(
-                        width: 50.0,
-                        height: 66.0,
-                        child: StreamBuilder( 
-                          stream: _luxController.stream,
-                          initialData: null,
-                          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlocker.setCard(Cards.four, snapshot.data), _contentController.sink.add(unlocker) },
-                              child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
-                            );
-                          },
-                        ),
-                      ),
+                      // Container(
+                      //   width: 50.0,
+                      //   height: 66.0,
+                      //   child: StreamBuilder( 
+                      //     stream: bloc.light,
+                      //     initialData: null,
+                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      //       return RaisedButton(
+                      //         color: Colors.purple.withOpacity(.1),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(18.0),
+                      //           side: BorderSide(color: Colors.purple.shade900)
+                      //         ),
+                      //         onPressed: () => { unlocker.setCard(Cards.one, snapshot.data), _contentController.sink.add(unlocker) },
+                      //         child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+                      // SizedBox(width: 10.0),
+                      // Container(
+                      //   width: 50.0,
+                      //   height: 66.0,
+                      //   child: StreamBuilder( 
+                      //     stream: bloc.light,
+                      //     initialData: null,
+                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      //       return RaisedButton(
+                      //         color: Colors.purple.withOpacity(.1),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(18.0),
+                      //           side: BorderSide(color: Colors.purple.shade900)
+                      //         ),
+                      //         onPressed: () => { unlocker.setCard(Cards.two, snapshot.data), _contentController.sink.add(unlocker) },
+                      //         child: Text(unlocker.values[1] == Value.blank ? '?' : '*')
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+                      // SizedBox(width: 10.0),
+                      // Container(
+                      //   width: 50.0,
+                      //   height: 66.0,
+                      //   child: StreamBuilder( 
+                      //     stream: bloc.light,
+                      //     initialData: null,
+                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      //       return RaisedButton(
+                      //         color: Colors.purple.withOpacity(.1),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(18.0),
+                      //           side: BorderSide(color: Colors.purple.shade900)
+                      //         ),
+                      //         onPressed: () => { unlocker.setCard(Cards.three, snapshot.data), _contentController.sink.add(unlocker) },
+                      //         child: Text(unlocker.values[2] == Value.blank ? '?' : '*')
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+                      // SizedBox(width: 10.0),
+                      // Container(
+                      //   width: 50.0,
+                      //   height: 66.0,
+                      //   child: StreamBuilder( 
+                      //     stream: bloc.light,
+                      //     initialData: null,
+                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      //       return RaisedButton(
+                      //         color: Colors.purple.withOpacity(.1),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(18.0),
+                      //           side: BorderSide(color: Colors.purple.shade900)
+                      //         ),
+                      //         onPressed: () => { unlocker.setCard(Cards.four, snapshot.data), _contentController.sink.add(unlocker) },
+                      //         child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(height: 50.0),
                   Text('Present value:', style: TextStyle( fontSize: 22.0 )),
                   SizedBox(height: 10.0),
                   StreamBuilder(
-                    stream: _luxController.stream,
-                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
+                    stream: bloc.light,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      return Text('${snapshot.data}',
+                      // return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
                         style: TextStyle( fontSize: 22.0 ),
                       );
                     }
