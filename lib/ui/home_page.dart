@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:tictactoe/light_bloc.dart';
+import 'package:tictactoe/unlocker_bloc.dart';
 import '../logic/unlocker.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -14,24 +14,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  static int pin = 1524;
-  Unlocker unlocker = Unlocker(pin);
-
   final bloc = LightBloc();
-  final StreamController _contentController = StreamController();
-
-
-  @override
-  void dispose() {
-    try {
-      //  _luxController.close();
-       _contentController.close();
-    } catch (exception) {
-      print(exception.toString());
-    } finally {
-      super.dispose();
-    }
-  }
+  final unlockerBloc = UnlockerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +26,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Container(
         color: Colors.purple.withOpacity(.2),
         child: Center(
-          child: StreamBuilder(
-            stream: _contentController.stream,
-            initialData: UnlockingStatus,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return  unlocker.state is UnlockingStatus ? Column(
+          child: Column(
+          // child: StreamBuilder(
+          //   stream: unlockerBloc.outUnlocker,
+          //   initialData: UnlockingStatus,
+          //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+          //     // return  snapshot.data is UnlockingStatus ? Column(
+          //     return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 50.0),
@@ -57,25 +43,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(    
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      // Container(
-                      //   width: 50.0,
-                      //   height: 66.0,
-                      //   child: StreamBuilder( 
-                      //     stream: bloc.light,
-                      //     initialData: null,
-                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      //       return RaisedButton(
-                      //         color: Colors.purple.withOpacity(.1),
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(18.0),
-                      //           side: BorderSide(color: Colors.purple.shade900)
-                      //         ),
-                      //         onPressed: () => { unlocker.setCard(Cards.one, snapshot.data), _contentController.sink.add(unlocker) },
-                      //         child: Text(unlocker.values[0] == Value.blank ? '?' : '*'),
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
+                       Container(
+                        width: 50.0,
+                        height: 66.0,
+                        child: StreamBuilder(
+                          stream: bloc.light,
+                          builder: (BuildContext context, AsyncSnapshot lightshot) {
+                            return RaisedButton(
+                              color: Colors.purple.withOpacity(.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.purple.shade900)
+                              ),
+                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.one, 'lux': lightshot.data})},
+                              child: StreamBuilder(
+                                stream: unlockerBloc.outUnlocker,
+                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
+                                  return Text( snapshot.data == null || snapshot.data[0] == Value.blank ? '?' :'*');
+                              }
+                              ),
+                            );
+                          }
+                        ),
+                      ),
                       // SizedBox(width: 10.0),
                       // Container(
                       //   width: 50.0,
@@ -144,32 +134,33 @@ class _MyHomePageState extends State<MyHomePage> {
                   StreamBuilder(
                     stream: bloc.light,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Text('${snapshot.data}',
-                      // return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
+                      return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
                         style: TextStyle( fontSize: 22.0 ),
                       );
                     }
                   ),
                   SizedBox(height: 70.0),
                 ],
-              ) : unlocker.verifier == Verifier.correct ? 
+              // );
+              // ) : unlocker.verifier == Verifier.correct ? 
               /* PIN IS CORRECT */
-              Text('You successfully unlocked the app!') 
+              // Text('You successfully unlocked the app!') 
               /* PIN IS INCORRECT */
-              : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
-                  SizedBox(height: 20.0),
-                  FlatButton(
-                    shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
-                    color: Colors.purple,
-                    onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
-                    child: Text('Try again', style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ); 
-            }
+              // : 
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
+              //     SizedBox(height: 20.0),
+              //     FlatButton(
+              //       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
+              //       color: Colors.purple,
+              //       onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
+              //       child: Text('Try again', style: TextStyle(color: Colors.white)),
+              //     ),
+              //   ],
+              // ); 
+      //       }
           ),
         ),
       ),

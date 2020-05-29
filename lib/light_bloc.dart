@@ -4,7 +4,7 @@ import 'package:light/light.dart';
 class LightBloc {
   
   Light _light;
-  StreamController _controller = StreamController();
+  StreamController _controller = StreamController.broadcast();
   StreamSink get _newLight => _controller.sink;
   Stream get light => _controller.stream;
 
