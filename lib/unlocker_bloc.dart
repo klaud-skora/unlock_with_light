@@ -25,11 +25,10 @@ class UnlockerBloc {
 
   void onData(data) {
     
-    if(data['lux'] != null ) {
-      print(data['card']);
-      unlocker.setCard(data['card'], data['lux']);
-    }
-    _inUnlocker.add({ 'state': unlocker.state, 'values': unlocker.values });
+    if( data['reset'] != null ) unlocker.reset();
+    if( data['lux'] != null ) unlocker.setCard(data['card'], data['lux']);
+    
+    _inUnlocker.add({ 'state': unlocker.state, 'values': unlocker.values, 'verifier': unlocker.verifier });
   }
 
 }

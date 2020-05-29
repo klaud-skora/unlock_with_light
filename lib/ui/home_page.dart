@@ -164,8 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   FlatButton(
                     shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
                     color: Colors.purple,
-                    onPressed: () { print('eki'); },
-                    // onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
+                    onPressed: () { unlockerBloc.action.add({ 'reset': true }); },
                     child: Text('Try again', style: TextStyle(color: Colors.white)),
                   ),
                 ],
