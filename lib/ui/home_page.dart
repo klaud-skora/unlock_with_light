@@ -20,19 +20,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar( title: Text(widget.title) ),
       body: Container(
         color: Colors.purple.withOpacity(.2),
         child: Center(
-          child: Column(
-          // child: StreamBuilder(
-          //   stream: unlockerBloc.outUnlocker,
-          //   initialData: UnlockingStatus,
-          //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-          //     // return  snapshot.data is UnlockingStatus ? Column(
-          //     return Column(
+          child: StreamBuilder(
+            stream: unlockerBloc.outUnlocker,
+            initialData: { 'state': UnlockingStatus },
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              print(snapshot.data);
+              return snapshot.data['state'] == UnlockingStatus || snapshot.data['state'] is UnlockingStatus ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 50.0),
@@ -59,73 +56,85 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: StreamBuilder(
                                 stream: unlockerBloc.outUnlocker,
                                 builder: (BuildContext context, AsyncSnapshot snapshot) { 
-                                  return Text( snapshot.data == null || snapshot.data[0] == Value.blank ? '?' :'*');
-                              }
+                                  return Text( snapshot.data == null || snapshot.data['values'][0] == Value.blank ? '?' :'*');
+                                }
                               ),
                             );
                           }
                         ),
                       ),
-                      // SizedBox(width: 10.0),
-                      // Container(
-                      //   width: 50.0,
-                      //   height: 66.0,
-                      //   child: StreamBuilder( 
-                      //     stream: bloc.light,
-                      //     initialData: null,
-                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      //       return RaisedButton(
-                      //         color: Colors.purple.withOpacity(.1),
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(18.0),
-                      //           side: BorderSide(color: Colors.purple.shade900)
-                      //         ),
-                      //         onPressed: () => { unlocker.setCard(Cards.two, snapshot.data), _contentController.sink.add(unlocker) },
-                      //         child: Text(unlocker.values[1] == Value.blank ? '?' : '*')
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
-                      // SizedBox(width: 10.0),
-                      // Container(
-                      //   width: 50.0,
-                      //   height: 66.0,
-                      //   child: StreamBuilder( 
-                      //     stream: bloc.light,
-                      //     initialData: null,
-                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      //       return RaisedButton(
-                      //         color: Colors.purple.withOpacity(.1),
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(18.0),
-                      //           side: BorderSide(color: Colors.purple.shade900)
-                      //         ),
-                      //         onPressed: () => { unlocker.setCard(Cards.three, snapshot.data), _contentController.sink.add(unlocker) },
-                      //         child: Text(unlocker.values[2] == Value.blank ? '?' : '*')
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
-                      // SizedBox(width: 10.0),
-                      // Container(
-                      //   width: 50.0,
-                      //   height: 66.0,
-                      //   child: StreamBuilder( 
-                      //     stream: bloc.light,
-                      //     initialData: null,
-                      //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      //       return RaisedButton(
-                      //         color: Colors.purple.withOpacity(.1),
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(18.0),
-                      //           side: BorderSide(color: Colors.purple.shade900)
-                      //         ),
-                      //         onPressed: () => { unlocker.setCard(Cards.four, snapshot.data), _contentController.sink.add(unlocker) },
-                      //         child: Text(unlocker.values[3] == Value.blank ? '?' : '*'),
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
+                      SizedBox(width: 10.0),
+                      Container(
+                        width: 50.0,
+                        height: 66.0,
+                        child: StreamBuilder(
+                          stream: bloc.light,
+                          builder: (BuildContext context, AsyncSnapshot lightshot) {
+                            return RaisedButton(
+                              color: Colors.purple.withOpacity(.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.purple.shade900)
+                              ),
+                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.two, 'lux': lightshot.data})},
+                              child: StreamBuilder(
+                                stream: unlockerBloc.outUnlocker,
+                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
+                                  return Text( snapshot.data == null || snapshot.data['values'][1] == Value.blank ? '?' :'*');
+                                }
+                              ),
+                            );
+                          }
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+                      Container(
+                        width: 50.0,
+                        height: 66.0,
+                        child: StreamBuilder(
+                          stream: bloc.light,
+                          builder: (BuildContext context, AsyncSnapshot lightshot) {
+                            return RaisedButton(
+                              color: Colors.purple.withOpacity(.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.purple.shade900)
+                              ),
+                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.three, 'lux': lightshot.data})},
+                              child: StreamBuilder(
+                                stream: unlockerBloc.outUnlocker,
+                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
+                                  return Text( snapshot.data == null || snapshot.data['values'][2] == Value.blank ? '?' :'*');
+                                }
+                              ),
+                            );
+                          }
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+                      Container(
+                        width: 50.0,
+                        height: 66.0,
+                        child: StreamBuilder(
+                          stream: bloc.light,
+                          builder: (BuildContext context, AsyncSnapshot lightshot) {
+                            return RaisedButton(
+                              color: Colors.purple.withOpacity(.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.purple.shade900)
+                              ),
+                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.four, 'lux': lightshot.data})},
+                              child: StreamBuilder(
+                                stream: unlockerBloc.outUnlocker,
+                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
+                                  return Text( snapshot.data == null || snapshot.data['values'][3] == Value.blank ? '?' :'*');
+                                }
+                              ),
+                            );
+                          }
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 50.0),
@@ -141,26 +150,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   SizedBox(height: 70.0),
                 ],
-              // );
+              )
+              // ;
               // ) : unlocker.verifier == Verifier.correct ? 
               /* PIN IS CORRECT */
               // Text('You successfully unlocked the app!') 
               /* PIN IS INCORRECT */
-              // : 
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-              //     Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
-              //     SizedBox(height: 20.0),
-              //     FlatButton(
-              //       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
-              //       color: Colors.purple,
-              //       onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
-              //       child: Text('Try again', style: TextStyle(color: Colors.white)),
-              //     ),
-              //   ],
-              // ); 
-      //       }
+              : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
+                  SizedBox(height: 20.0),
+                  FlatButton(
+                    shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
+                    color: Colors.purple,
+                    onPressed: () { print('eki'); },
+                    // onPressed: () { unlocker.reset(); _contentController.sink.add(unlocker); },
+                    child: Text('Try again', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ),
