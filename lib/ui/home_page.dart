@@ -150,11 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   SizedBox(height: 70.0),
                 ],
-              )
-              // ;
-              // ) : unlocker.verifier == Verifier.correct ? 
+              ) : snapshot.data['verifier'] == Verifier.correct ? 
               /* PIN IS CORRECT */
-              // Text('You successfully unlocked the app!') 
+              Text('You successfully unlocked the app!') 
               /* PIN IS INCORRECT */
               : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
