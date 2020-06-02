@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe/light_bloc.dart';
-import 'package:tictactoe/unlocker_bloc.dart';
-import '../logic/unlocker.dart';
 
-class MyHomePage extends StatefulWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tictactoe/unlocker_bloc.dart';
+import 'package:tictactoe/light_bloc.dart';
+
+class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  final bloc = LightBloc();
-  final unlockerBloc = UnlockerBloc();
+  
 
   @override
   Widget build(BuildContext context) {
+    final bloc = LightBloc();
+    // final UnlockerBloc unlockerBloc = BlocProvider.of<UnlockerBloc>(context);
     return Scaffold(
-      appBar: AppBar( title: Text(widget.title) ),
-      body: Container(
-        color: Colors.purple.withOpacity(.2),
-        child: Center(
-          child: StreamBuilder(
-            stream: unlockerBloc.outUnlocker,
-            initialData: { 'state': UnlockingStatus },
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              print(snapshot.data);
-              return snapshot.data['state'] == UnlockingStatus || snapshot.data['state'] is UnlockingStatus ? Column(
+      appBar: AppBar( title: Text(title) ),
+      body: BlocBuilder<UnlockerBloc, UnlockerState>(
+        builder: (context, state) {
+          return Container(
+            color: Colors.purple.withOpacity(.2),
+            child: Center(
+              child: state is EmptyForm || state is UnlockerWithFilledFieldOne || state is UnlockerWithFilledFieldsTwo || state is UnlockerWithFilledFieldsThree ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 50.0),
@@ -40,99 +32,59 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(    
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                       Container(
+                      Container(
                         width: 50.0,
                         height: 66.0,
-                        child: StreamBuilder(
-                          stream: bloc.light,
-                          builder: (BuildContext context, AsyncSnapshot lightshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.one, 'lux': lightshot.data})},
-                              child: StreamBuilder(
-                                stream: unlockerBloc.outUnlocker,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
-                                  return Text( snapshot.data == null || snapshot.data['values'][0] == Value.blank ? '?' :'*');
-                                }
-                              ),
-                            );
-                          }
+                        child: RaisedButton(
+                          color: Colors.purple.withOpacity(.1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.purple.shade900)
+                          ),
+                          onPressed: () => { state is EmptyForm ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinOneEvent) : null },
+                          child: Text( state is EmptyForm ? '?' : '*'),
                         ),
                       ),
                       SizedBox(width: 10.0),
                       Container(
                         width: 50.0,
                         height: 66.0,
-                        child: StreamBuilder(
-                          stream: bloc.light,
-                          builder: (BuildContext context, AsyncSnapshot lightshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.two, 'lux': lightshot.data})},
-                              child: StreamBuilder(
-                                stream: unlockerBloc.outUnlocker,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
-                                  return Text( snapshot.data == null || snapshot.data['values'][1] == Value.blank ? '?' :'*');
-                                }
-                              ),
-                            );
-                          }
+                        child: RaisedButton(
+                          color: Colors.purple.withOpacity(.1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.purple.shade900)
+                          ),
+                          onPressed: () => { state is UnlockerWithFilledFieldOne ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinTwoEvent) : null },
+                          child: Text( state is EmptyForm || state is UnlockerWithFilledFieldOne ? '?' : '*'),
                         ),
                       ),
                       SizedBox(width: 10.0),
                       Container(
                         width: 50.0,
                         height: 66.0,
-                        child: StreamBuilder(
-                          stream: bloc.light,
-                          builder: (BuildContext context, AsyncSnapshot lightshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.three, 'lux': lightshot.data})},
-                              child: StreamBuilder(
-                                stream: unlockerBloc.outUnlocker,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
-                                  return Text( snapshot.data == null || snapshot.data['values'][2] == Value.blank ? '?' :'*');
-                                }
-                              ),
-                            );
-                          }
+                        child: RaisedButton(
+                          color: Colors.purple.withOpacity(.1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.purple.shade900)
+                          ),
+                          onPressed: () => { state is UnlockerWithFilledFieldsTwo ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinThreeEvent) : null },
+                          child: Text( state is UnlockerWithFilledFieldsThree ? '*' : '?'),
                         ),
                       ),
                       SizedBox(width: 10.0),
                       Container(
                         width: 50.0,
                         height: 66.0,
-                        child: StreamBuilder(
-                          stream: bloc.light,
-                          builder: (BuildContext context, AsyncSnapshot lightshot) {
-                            return RaisedButton(
-                              color: Colors.purple.withOpacity(.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.purple.shade900)
-                              ),
-                              onPressed: () => { unlockerBloc.action.add({ 'card': Cards.four, 'lux': lightshot.data})},
-                              child: StreamBuilder(
-                                stream: unlockerBloc.outUnlocker,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) { 
-                                  return Text( snapshot.data == null || snapshot.data['values'][3] == Value.blank ? '?' :'*');
-                                }
-                              ),
-                            );
-                          }
+                        child: RaisedButton(
+                          color: Colors.purple.withOpacity(.1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.purple.shade900)
+                          ),
+                          onPressed: () => { state is UnlockerWithFilledFieldsThree ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinFourEvent) : null },
+                          child: Text( '?' ),
                         ),
                       ),
                     ],
@@ -143,14 +95,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   StreamBuilder(
                     stream: bloc.light,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Text( snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
+                      return Text('${snapshot.data}', 
                         style: TextStyle( fontSize: 22.0 ),
                       );
                     }
                   ),
                   SizedBox(height: 70.0),
                 ],
-              ) : snapshot.data['verifier'] == Verifier.correct ? 
+              ) : state is UnlockerSuccess ? 
               /* PIN IS CORRECT */
               Text('You successfully unlocked the app!') 
               /* PIN IS INCORRECT */
@@ -162,15 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   FlatButton(
                     shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
                     color: Colors.purple,
-                    onPressed: () { unlockerBloc.action.add({ 'reset': true }); },
+                    onPressed: () { BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.ResetEvent); },
                     child: Text('Try again', style: TextStyle(color: Colors.white)),
                   ),
                 ],
-              );
-            }
-          ),
-        ),
-      ),
+              ),
+            ),
+          );
+        },
+      )
     );
   }
 }

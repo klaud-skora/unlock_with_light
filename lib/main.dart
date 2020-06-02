@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import './unlocker_bloc.dart';
 import './ui/home_page.dart';
 
 void main() {
@@ -15,8 +18,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(
-        title: 'Light unlocker',
+      home: BlocProvider<UnlockerBloc>(
+        create: (context) => UnlockerBloc(),
+        child: MyHomePage(
+          title: 'Light unlocker',
+        ),
       ),
     );
   }

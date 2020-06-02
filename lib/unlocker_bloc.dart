@@ -1,34 +1,62 @@
-import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:tictactoe/light_bloc.dart';
 import 'package:tictactoe/logic/unlocker.dart';
 
-class UnlockerBloc {
-  
+enum UnlockerEvent { SetPinOneEvent, SetPinTwoEvent, SetPinThreeEvent, SetPinFourEvent, ResetEvent }
+
+abstract class UnlockerState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+class EmptyForm extends UnlockerState {}
+class UnlockerWithFilledFieldOne extends UnlockerState {}
+class UnlockerWithFilledFieldsTwo extends UnlockerState {}
+class UnlockerWithFilledFieldsThree extends UnlockerState {}
+class UnlockerWithFilledFieldsFour extends UnlockerState {}
+class UnlockerSuccess extends UnlockerState {}
+class UnlockerFailure extends UnlockerState {}
+
+class UnlockerBloc extends Bloc<UnlockerEvent, UnlockerState> {
+
+  @override
+  UnlockerState get initialState => EmptyForm();
+
   static int pin = 1524;
-  static Unlocker unlocker = Unlocker(pin);
+  
+  final unlocker = Unlocker(pin);
+  static final LightBloc bloc = LightBloc(); 
+  var light = bloc.light.runtimeType;
 
-  StreamController _controller = StreamController.broadcast();
-  StreamSink get _inUnlocker => _controller.sink;
-  Stream get outUnlocker => _controller.stream;
+  int lightValue;
 
-
-  StreamController _actionController = StreamController();
-  StreamSink get action => _actionController.sink;
-
-  UnlockerBloc() {
-   _actionController.stream.listen(onData);
+  @override
+  Stream<UnlockerState> mapEventToState(UnlockerEvent event) async* {
+    print(light);
+    switch (event) {
+      case UnlockerEvent.SetPinOneEvent:
+        unlocker.setCard(Cards.one, lightValue);
+        yield UnlockerWithFilledFieldOne();
+        break;
+      case UnlockerEvent.SetPinTwoEvent:
+        unlocker.setCard(Cards.two, lightValue);
+        yield UnlockerWithFilledFieldsTwo();
+        break;
+      case UnlockerEvent.SetPinThreeEvent:
+        unlocker.setCard(Cards.three, lightValue);
+        yield UnlockerWithFilledFieldsThree();
+        break;
+      case UnlockerEvent.SetPinFourEvent:
+        unlocker.setCard(Cards.four, lightValue);
+        if(unlocker.verifier == Verifier.correct) yield UnlockerSuccess();
+        else yield UnlockerFailure();
+        break;
+      case UnlockerEvent.ResetEvent:
+        unlocker.reset();
+        yield EmptyForm();
+        break;
+    }
   }
-
-   void dispose() {
-    _actionController.close();
-    _controller.close();
-  }
-
-  void onData(data) {
-    
-    if( data['reset'] != null ) unlocker.reset();
-    if( data['lux'] != null ) unlocker.setCard(data['card'], data['lux']);
-    
-    _inUnlocker.add({ 'state': unlocker.state, 'values': unlocker.values, 'verifier': unlocker.verifier });
-  }
-
 }

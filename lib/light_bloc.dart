@@ -12,16 +12,15 @@ class LightBloc {
 
   LightBloc() {
     _light = new Light();
-   _subscription = _light.lightSensorStream.listen(getLight);
+    _subscription = _light.lightSensorStream.listen(getLight);
   }
 
-   void dispose() {
+  void dispose() {
     _subscription.cancel();
     _controller.close();
   }
 
   void getLight(int luxValue) {
-    print(luxValue);  
     _newLight.add(luxValue);
   }
 
