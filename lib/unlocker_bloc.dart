@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tictactoe/light_bloc.dart';
 import 'package:tictactoe/logic/unlocker.dart';
 
 enum UnlockerEvent { SetPinOneEvent, SetPinTwoEvent, SetPinThreeEvent, SetPinFourEvent, ResetEvent }
@@ -24,17 +23,18 @@ class UnlockerBloc extends Bloc<UnlockerEvent, UnlockerState> {
   @override
   UnlockerState get initialState => EmptyForm();
 
-  static int pin = 1524;
+  static int pin = 1111;
   
-  final unlocker = Unlocker(pin);
-  static final LightBloc bloc = LightBloc(); 
-  var light = bloc.light.runtimeType;
+  final unlocker = Unlocker(pin);  
+  int _lightValue;
+  int get lightValue => _lightValue;
 
-  int lightValue;
+  setLight(int light) {
+    _lightValue = light;
+  }
 
   @override
   Stream<UnlockerState> mapEventToState(UnlockerEvent event) async* {
-    print(light);
     switch (event) {
       case UnlockerEvent.SetPinOneEvent:
         unlocker.setCard(Cards.one, lightValue);

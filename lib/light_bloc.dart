@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:light/light.dart';
+// import 'package:rxdart/rxdart.dart';
 
 class LightBloc {
   
   Light _light;
+
   StreamController _controller = StreamController.broadcast();
   StreamSink get _newLight => _controller.sink;
   Stream get light => _controller.stream;
+
 
   StreamSubscription _subscription;
 
@@ -21,6 +24,7 @@ class LightBloc {
   }
 
   void getLight(int luxValue) {
+    print(luxValue);
     _newLight.add(luxValue);
   }
 

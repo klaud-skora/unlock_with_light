@@ -95,7 +95,8 @@ class MyHomePage extends StatelessWidget {
                   StreamBuilder(
                     stream: bloc.light,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Text('${snapshot.data}', 
+                      BlocProvider.of<UnlockerBloc>(context).setLight(snapshot.data);
+                      return Text(snapshot.data == null ? '(no value was found)' : '${snapshot.data}', 
                         style: TextStyle( fontSize: 22.0 ),
                       );
                     }
