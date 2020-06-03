@@ -21,7 +21,7 @@ class MyHomePage extends StatelessWidget {
           return Container(
             color: Colors.purple.withOpacity(.2),
             child: Center(
-              child: state is EmptyForm || state is UnlockerWithFilledFieldOne || state is UnlockerWithFilledFieldsTwo || state is UnlockerWithFilledFieldsThree ? Column(
+              child: state is EmptyForm || state is UnlockerWithFilledFields ? Column( 
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 50.0),
@@ -41,7 +41,7 @@ class MyHomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.purple.shade900)
                           ),
-                          onPressed: () => { state is EmptyForm ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinOneEvent) : null },
+                          onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinOneEvent),
                           child: Text( state is EmptyForm ? '?' : '*'),
                         ),
                       ),
@@ -55,8 +55,8 @@ class MyHomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.purple.shade900)
                           ),
-                          onPressed: () => { state is UnlockerWithFilledFieldOne ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinTwoEvent) : null },
-                          child: Text( state is EmptyForm || state is UnlockerWithFilledFieldOne ? '?' : '*'),
+                          onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinTwoEvent),
+                          child: Text( state is EmptyForm || (state is UnlockerWithFilledFields && state.filledFields == 1) ? '?' : '*'), 
                         ),
                       ),
                       SizedBox(width: 10.0),
@@ -69,8 +69,8 @@ class MyHomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.purple.shade900)
                           ),
-                          onPressed: () => { state is UnlockerWithFilledFieldsTwo ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinThreeEvent) : null },
-                          child: Text( state is UnlockerWithFilledFieldsThree ? '*' : '?'),
+                          onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinThreeEvent),
+                          child: Text( state is UnlockerWithFilledFields && (state.filledFields == 3 || state.filledFields == 4 )? '*' : '?'), 
                         ),
                       ),
                       SizedBox(width: 10.0),
@@ -83,12 +83,22 @@ class MyHomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.purple.shade900)
                           ),
-                          onPressed: () => { state is UnlockerWithFilledFieldsThree ? BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinFourEvent) : null },
-                          child: Text( '?' ),
+                          onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.SetPinFourEvent),
+                          child: Text( state is UnlockerWithFilledFields && state.filledFields == 4 ?  '*' : '?' ),
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 40.0),
+                  state is UnlockerWithFilledFields && state.filledFields == 4 ? RaisedButton(
+                    color: Colors.purple.withOpacity(.8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(color: Colors.purple.shade900)
+                    ),
+                    onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.VerifyEvent),
+                    child: Text( 'Submit' ),
+                  ) : SizedBox(),
                   SizedBox(height: 50.0),
                   Text('Present value:', style: TextStyle( fontSize: 22.0 )),
                   SizedBox(height: 10.0),
@@ -107,7 +117,8 @@ class MyHomePage extends StatelessWidget {
               /* PIN IS CORRECT */
               Text('You successfully unlocked the app!') 
               /* PIN IS INCORRECT */
-              : Column(
+              : state is UnlockerFailure ? 
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('The pin is WRONG', style: TextStyle(fontWeight: FontWeight.w500)),
@@ -115,11 +126,11 @@ class MyHomePage extends StatelessWidget {
                   FlatButton(
                     shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(12.0) ),
                     color: Colors.purple,
-                    onPressed: () { BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.ResetEvent); },
+                    onPressed: () => BlocProvider.of<UnlockerBloc>(context).add(UnlockerEvent.ResetEvent),
                     child: Text('Try again', style: TextStyle(color: Colors.white)),
                   ),
                 ],
-              ),
+              ) : Text('Loading...'),
             ),
           );
         },

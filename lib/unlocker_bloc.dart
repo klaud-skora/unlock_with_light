@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tictactoe/logic/unlocker.dart';
 
-enum UnlockerEvent { SetPinOneEvent, SetPinTwoEvent, SetPinThreeEvent, SetPinFourEvent, ResetEvent }
+enum UnlockerEvent { SetPinOneEvent, SetPinTwoEvent, SetPinThreeEvent, SetPinFourEvent, VerifyEvent, ResetEvent }
 
 abstract class UnlockerState extends Equatable {
   @override
@@ -11,10 +11,14 @@ abstract class UnlockerState extends Equatable {
 }
 
 class EmptyForm extends UnlockerState {}
-class UnlockerWithFilledFieldOne extends UnlockerState {}
-class UnlockerWithFilledFieldsTwo extends UnlockerState {}
-class UnlockerWithFilledFieldsThree extends UnlockerState {}
-class UnlockerWithFilledFieldsFour extends UnlockerState {}
+class UnlockerWithFilledFields extends UnlockerState {
+  final int filledFields;
+  UnlockerWithFilledFields(this.filledFields);
+
+  @override
+  List<Object> get props => [filledFields];
+}
+class PinIsSet extends UnlockerState {}
 class UnlockerSuccess extends UnlockerState {}
 class UnlockerFailure extends UnlockerState {}
 
@@ -38,19 +42,23 @@ class UnlockerBloc extends Bloc<UnlockerEvent, UnlockerState> {
     switch (event) {
       case UnlockerEvent.SetPinOneEvent:
         unlocker.setCard(Cards.one, lightValue);
-        yield UnlockerWithFilledFieldOne();
+        yield UnlockerWithFilledFields(1);
         break;
       case UnlockerEvent.SetPinTwoEvent:
         unlocker.setCard(Cards.two, lightValue);
-        yield UnlockerWithFilledFieldsTwo();
+        if(unlocker.values[0] != Value.blank) yield UnlockerWithFilledFields(2);
         break;
       case UnlockerEvent.SetPinThreeEvent:
         unlocker.setCard(Cards.three, lightValue);
-        yield UnlockerWithFilledFieldsThree();
+        if(unlocker.values[1] != Value.blank) yield UnlockerWithFilledFields(3);
         break;
       case UnlockerEvent.SetPinFourEvent:
         unlocker.setCard(Cards.four, lightValue);
-        if(unlocker.verifier == Verifier.correct) yield UnlockerSuccess();
+        if(unlocker.values[2] != Value.blank) yield UnlockerWithFilledFields(4);
+        break;
+      case UnlockerEvent.VerifyEvent:
+        
+        if(unlocker.state is SetCodeStatus && unlocker.verifier == Verifier.correct) yield UnlockerSuccess();
         else yield UnlockerFailure();
         break;
       case UnlockerEvent.ResetEvent:
