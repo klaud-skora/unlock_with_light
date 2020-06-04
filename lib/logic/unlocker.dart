@@ -103,6 +103,7 @@ class Unlocker {
   }
 
   setCard(Cards card, luxes) {
+    
     switch(card) {
       case Cards.one:
         _values[0] = getValue(luxes);

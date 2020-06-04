@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tictactoe/logic/unlocker.dart';
 
-enum UnlockerEvent { SetPinOneEvent, SetPinTwoEvent, SetPinThreeEvent, SetPinFourEvent, VerifyEvent, ResetEvent }
+enum UnlockerEvent { SetPinEvent, VerifyEvent, ResetEvent }
 
 abstract class UnlockerState extends Equatable {
   @override
@@ -28,7 +28,6 @@ class UnlockerBloc extends Bloc<UnlockerEvent, UnlockerState> {
   UnlockerState get initialState => EmptyForm();
 
   static int pin = 1111;
-  
   final unlocker = Unlocker(pin);  
   int _lightValue;
   int get lightValue => _lightValue;
@@ -40,24 +39,28 @@ class UnlockerBloc extends Bloc<UnlockerEvent, UnlockerState> {
   @override
   Stream<UnlockerState> mapEventToState(UnlockerEvent event) async* {
     switch (event) {
-      case UnlockerEvent.SetPinOneEvent:
-        unlocker.setCard(Cards.one, lightValue);
-        yield UnlockerWithFilledFields(1);
-        break;
-      case UnlockerEvent.SetPinTwoEvent:
-        unlocker.setCard(Cards.two, lightValue);
-        if(unlocker.values[0] != Value.blank) yield UnlockerWithFilledFields(2);
-        break;
-      case UnlockerEvent.SetPinThreeEvent:
-        unlocker.setCard(Cards.three, lightValue);
-        if(unlocker.values[1] != Value.blank) yield UnlockerWithFilledFields(3);
-        break;
-      case UnlockerEvent.SetPinFourEvent:
-        unlocker.setCard(Cards.four, lightValue);
-        if(unlocker.values[2] != Value.blank) yield UnlockerWithFilledFields(4);
+      case UnlockerEvent.SetPinEvent:
+        if( state is EmptyForm && unlocker.values.every((element) => element == Value.blank) ) {
+          unlocker.setCard(Cards.one, lightValue);
+          yield UnlockerWithFilledFields(1);
+        } else if(state is UnlockerWithFilledFields) {          
+          if( state.props.contains(3) ) {
+            unlocker.setCard(Cards.four, lightValue);
+            yield UnlockerWithFilledFields(4);
+          }
+
+          if( state.props.contains(2) ) {
+            unlocker.setCard(Cards.three, lightValue);
+            yield UnlockerWithFilledFields(3);
+          }
+          if( state.props.contains(1)) {
+            unlocker.setCard(Cards.two, lightValue);
+            yield UnlockerWithFilledFields(2);
+          }
+
+        }
         break;
       case UnlockerEvent.VerifyEvent:
-        
         if(unlocker.state is SetCodeStatus && unlocker.verifier == Verifier.correct) yield UnlockerSuccess();
         else yield UnlockerFailure();
         break;
